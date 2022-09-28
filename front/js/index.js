@@ -15,11 +15,12 @@ async function displayProducts() {
     //const cloneElt = document.importNode(templateElt.content, true)   //another solution, it's work
 
     if (templateElt) {
-      cloneElt.getElementById("productName").textContent = product.name;
-      cloneElt.getElementById("productDescription").textContent =
-        product.description;
-      cloneElt.getElementById("imageKanap").src = product.imageUrl;
-      cloneElt.getElementById("linkKanap").href += `?id=${product._id}`;
+      cloneElt.querySelector(".productName").textContent = product.name;
+      cloneElt.querySelector(".productDescription").textContent = product.description;
+      cloneElt.querySelector("article img").src = product.imageUrl;
+      cloneElt.querySelector("article img").alt = product.altTxt;
+      cloneElt.querySelector("a").href += `?id=${product._id}`;
+      //---alt
     } else console.error("templateElt not found, please restore templateElt");
 
     if (items) {
@@ -28,3 +29,4 @@ async function displayProducts() {
   }
 }
 displayProducts();
+
