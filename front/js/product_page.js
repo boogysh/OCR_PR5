@@ -11,7 +11,8 @@ const fetchproduct = (productId) =>
     .catch((err) => console.log("Error fetchProducts", err));
 //-----productDisplay
 const productDisplay = async () => {
-  document.querySelector("#item__img img").src = productData.imageUrl;
+  document.querySelector(".item__img img").src = productData.imageUrl;
+  document.querySelector(".item__img img").alt = productData.altTxt;
   document.getElementById("title").innerText = productData.name;
   document.getElementById("price").innerText = productData.price;
   document.getElementById("description").innerText = productData.description;
@@ -38,7 +39,7 @@ const addToCart = () => {
 
     const select_color = document.getElementById("colors");
     console.log(select_color.value);
-    const select_quantity = document.getElementById("my_quantity");
+    const select_quantity = document.getElementById("quantity");
     console.log(select_quantity.value);
     //console.log(productArray) //null
 
