@@ -27,7 +27,6 @@ const cartDisplay = async (products) => {
             <p>Qté : </p>
             <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
           </div>
-          <p id="cartQuantityAlert"></p>
           <div class="cart__item__content__settings__delete">
             <p class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</p>
           </div>
