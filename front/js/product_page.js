@@ -1,4 +1,3 @@
-///////////
 //-----ProductId---------
 function getProductId() {
   return new URL(location.href).searchParams.get("id");
@@ -6,9 +5,9 @@ function getProductId() {
 //------FetchProduct----------
 const fetchproduct = (productId) =>
   fetch(`http://localhost:3000/api/products/${productId}`)
-    .then((res) => res.json())
-    .then((promise) => (productData = promise))
-    .catch((err) => console.log("Error fetchProducts", err));
+    .then(res => res.json())
+    .then(promise => productData = promise)
+    .catch(err => console.log("Error fetchProducts", err));
 //-----productDisplay
 const productDisplay = async () => {
   document.querySelector(".item__img img").src = productData.imageUrl;
