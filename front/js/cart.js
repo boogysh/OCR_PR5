@@ -50,21 +50,22 @@ const modifyQuantity = async (products) => {
           products[i]._id == nvQuantity.dataset.id &&
           products[i].color == nvQuantity.dataset.color
         ) {
-          if (nvQuantity.value > 100) {
-            nvQuantity.value = 100;
-            //return nvQuantity.value
+          if (nvQuantity.valueAsNumber > 100) {
+            nvQuantity.valueAsNumber = 100;
+           
           }
           if (nvQuantity.value <= 0) {
             nvQuantity.value = 1;
-            return nvQuantity.value;
+            console.log(nvQuantity.valueAsNumber)
+            
           }
-          if (nvQuantity.value >= 1 && nvQuantity.value <= 100) {
-            //console.log(nvQuantity.value),              //20 new quantity
+          if (nvQuantity.valueAsNumber >= 1 && nvQuantity.valueAsNumber <= 100) {
+            //console.log(nvQuantity.valueAsNumber),              //20 new quantity
             //console.log(products[i].quantity),          //9 in the cart
-            (products[i].quantity = nvQuantity.value), //20 in the cart
-              localStorage.setItem("product", JSON.stringify(products)),
-              getTotalPrice(products);
-            return nvQuantity.value;
+            (products[i].quantity = nvQuantity.valueAsNumber), //20 in the cart
+            console.log(products[i].quantity),
+            localStorage.setItem("product", JSON.stringify(products)),
+            getTotalPrice(products);
           }
         }
       }
@@ -116,14 +117,15 @@ const getTotalPrice = async (products) => {
     each_product__total_price__array.push(each_product__total_price);
     each_product__quantity__array.push(products[i].quantity);
   }
-  const each_product__quantity = eval(each_product__quantity__array.join("+"));
+  const total_products__quantity = eval(each_product__quantity__array.join("+"));
   const all_products__total_price__result = eval(
     each_product__total_price__array.join("+")
   );
+  
 
   document.getElementById(
     "totalQuantity"
-  ).innerHTML = `<p>Total (<span id="totalQuantity">${each_product__quantity}</span> articles) : <span id="totalPrice"></span>${all_products__total_price__result} €</p>`;
+  ).innerHTML = `<p>Total (<span id="totalQuantity">${total_products__quantity}</span> articles) : <span id="totalPrice"></span>${all_products__total_price__result} €</p>`;
 
   return all_products__total_price__result;
 };
@@ -298,15 +300,14 @@ const postDataOrder = (order) =>
     .then((res) => res.json())
     .then((promise) => (responseServer = promise))
     .catch((err) => console.log("Problem, fetch post", err));
-//---------Optimisation Order-------------------
+
+    //---------Optimisation Order-------------------
 async function optimisationDataOrder(products) {
   const priceOrder = await getTotalPrice(products);
-  //console.log(priceOrder);
-  //----------
   const productsMoreInfo = [];
   const orderOptim = JSON.parse(localStorage.getItem("product"));
   orderOptim.forEach((each_product_cart) => {
-    //The object  data_each_product_cart need to push into the array "orderMoreInfo".
+    //The obj data_each_product_cart must be pushed in the"orderMoreInfo".
     const data_more_info = {
       id: each_product_cart._id,
       color: each_product_cart.color,
@@ -314,16 +315,14 @@ async function optimisationDataOrder(products) {
     };
     productsMoreInfo.push(data_more_info);
   });
-  //-----------------------------------------------
-  //console.log(responseServer)
   const dataOrder = {
     //responseServer after await postDataOrder in the SendOrder
     contact: responseServer.contact,
     order: responseServer.orderId,
     products: responseServer.products,
-
+    
     productsMoreInfo: productsMoreInfo,
-    priceOrder: `${priceOrder} €`,
+    priceOrder: priceOrder
   };
   if (dataOrder) {
     localStorage.setItem("orderClient", JSON.stringify(dataOrder));
@@ -341,7 +340,7 @@ async function optimisationDataOrder(products) {
   //-----------------------------------------------------------
   location.href = "confirmation.html";
   // if desactivated the orders are stocked in the localStorage
-  // to verify the logs of product page need to by desactivated
+  // for to verify the logs of product page need to by desactivated
   return dataOrder;
 }
 //++++++++++++++++++++++++++++++++
@@ -361,14 +360,15 @@ const main = async () => {
   sendForm.addEventListener("submit", async function sendOrder(e) {
     e.preventDefault(); //to stop sending the form
 
-    //input values from localStorage
+    //get input values from localStorage
     valueFirstName = JSON.parse(localStorage.getItem("firstName"));
     valueLastName = JSON.parse(localStorage.getItem("lastName"));
     valueAddress = JSON.parse(localStorage.getItem("address"));
     valueCity = JSON.parse(localStorage.getItem("city"));
     valueEmail = JSON.parse(localStorage.getItem("email"));
     //--------------------
-    if (valueFirstName && valueLastName && valueAddress && valueCity && valueEmail) {
+    if (valueFirstName && valueLastName && valueAddress && valueCity
+       && valueEmail) {
       const order = await prepareOrder();
       await postDataOrder(order);
       optimisationDataOrder(products);
